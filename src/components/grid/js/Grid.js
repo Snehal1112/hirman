@@ -1,50 +1,57 @@
 import React, { PureComponent } from 'react';
 import TopToolbar from './TopToolbar';
-import { Td, TH } from '../styled/Grid';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSort } from '@fortawesome/free-solid-svg-icons';
+import Header from './ColumnHeader';
 
 class Grid extends PureComponent {
+	constructor(props) {
+		super(props);
+
+		const { defaultSorting: { filed = undefined, dire = 'ASC' } } = this.props;
+
+		this.state = {
+			sortBy: {
+				filed: filed ? filed : undefined,
+				dire: dire ? dire : 'ASC'
+			}
+		};
+	}
 	createHeader() {
 		const { columns = [] } = this.props;
-		return columns.map((header, index) => {
-			return (
-				<TH key={index} header={header}>
-					<span>{header.name}</span>
-					{header.sortable ? (
-						<span>
-							<FontAwesomeIcon icon={faSort} />
-						</span>
-					) : (
-						''
-					)}
-				</TH>
-			);
-		});
+		return columns.map((header, index) => <Header key={index} header={header} sortBy={this.state.sortBy} />);
 	}
 
-	createRows(data) {
-		const { columns = [] } = this.props;
+	rowRender() {
+		const { columns = [], data = [] } = this.props;
 		const rows = data.map((row) => {
-			return <tr key={row.id}>{columns.map((col) => <Td>{row[col.dataIndex]}</Td>)}</tr>;
+			return (
+				<tr key={row.id}>
+					{columns.map((col, index) => (
+						<td key={index} style={{ textAlign: col.textAlign ? col.textAlign : 'left' }}>
+							{col.renderer ? col.renderer(row[col.dataIndex], row, col) : row[col.dataIndex]}
+						</td>
+					))}
+				</tr>
+			);
 		});
 		return [ ...rows ];
 	}
 
-	rowRender(data) {
-		return this.createRows(data);
+	componentDidMount() {
+		const { onAfterRender = () => {}, defaultSorting = undefined } = this.props;
+		onAfterRender(defaultSorting);
 	}
 
 	render() {
 		const { topBar = {} } = this.props;
+
 		return (
 			<div>
 				<TopToolbar {...topBar} />
-				<table style={{ border: '1px solid #d3d3d3' }} width="100%">
+				<table>
 					<thead>
 						<tr>{this.createHeader()}</tr>
 					</thead>
-					<tbody>{this.rowRender([])}</tbody>
+					<tbody>{this.rowRender()}</tbody>
 				</table>
 			</div>
 		);
