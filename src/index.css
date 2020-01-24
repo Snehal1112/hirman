@@ -6,5 +6,6 @@ body, #root, .App {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
-
+  display: flex;
+  justify-content: center;
 }
