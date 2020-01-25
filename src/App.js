@@ -47,13 +47,13 @@ const columns = [
 ];
 class App extends Component {
 	render() {
-		const { items = [],sort:{filed="experience", dire="ASC"} } = this.props;
+		const { items = [],sort:{field="experience", dire="ASC"} } = this.props;
 		return (
 			<div className="App">
 				<Grid
 					columns={columns}
 					sorting={{
-						filed,
+						field,
 						dire
 					}}
 					topBar={{

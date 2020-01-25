@@ -2,7 +2,7 @@ import {LIST, SORT} from '../actions/action';
 
 const initState = {
 	items: [],
-	sort:{filed:undefined,dire:'ASC'}
+	sort:{field:undefined,dire:'ASC'}
 };
 
 export default (state = initState, {type,payload}) => {

@@ -10,11 +10,11 @@ class Grid extends PureComponent {
 	onHeaderClick(header){
 		if (header.sortable) {
 			let { data = [], sorting } = this.props;
-			if (sorting.filed === header.dataIndex){
+			if (sorting.field === header.dataIndex){
 				sorting.dire = sorting.dire === "ASC" ? "DEC":"ASC";
 			} else {
 				sorting = {
-					filed : header.dataIndex,
+					field : header.dataIndex,
 					sort:"ASC"
 				};
 			}

@@ -35,7 +35,7 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 	];
 
 	if (sorting) {
-		data = sortByFiled(data,sorting)
+		data = sortByField(data,sorting)
 	}
 
 	dispatch({
@@ -48,17 +48,17 @@ const sortBy = (data, sort)=>dispatch=>{
 	dispatch({
 		type: SORT,
 		payload: {
-			items: sortByFiled(data,sort),
+			items: sortByField(data,sort),
 			sort
 		}
 	});
 };
 
-const sortByFiled = (data, sort)=>{
-	const { filed, dire = 'ASC' } = sort;
+const sortByField = (data, sort)=>{
+	const { field, dire = 'ASC' } = sort;
 	return [...data].sort((one, two) => {
-		let valueOne = one[filed];
-		let valueTwo = two[filed];
+		let valueOne = one[field];
+		let valueTwo = two[field];
 
 		if (typeof valueOne === "string") {
 			valueOne = valueOne.toUpperCase();

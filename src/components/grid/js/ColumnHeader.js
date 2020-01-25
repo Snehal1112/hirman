@@ -15,8 +15,8 @@ const ColumnHeader = (props) => {
 			<Title sortable={sortable} onClick={onClickTitle}>
 				<span>{header.name}</span>
 				{sortable ? (
-					<SortContainer sortedField={sort.filed === header.dataIndex}>
-						<FontAwesomeIcon icon={sort.dire === undefined || sort.filed !== header.dataIndex? faSort : sort.dire === "ASC" ? faSortUp : faSortDown} color={'#000000'} />
+					<SortContainer sortedField={sort.field === header.dataIndex}>
+						<FontAwesomeIcon icon={sort.dire === undefined || sort.field !== header.dataIndex? faSort : sort.dire === "ASC" ? faSortUp : faSortDown} color={'#000000'} />
 					</SortContainer>
 				) : (
 					''
