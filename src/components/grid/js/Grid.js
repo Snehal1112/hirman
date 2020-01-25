@@ -5,19 +5,25 @@ import Header from './ColumnHeader';
 class Grid extends PureComponent {
 	constructor(props) {
 		super(props);
-
-		const { defaultSorting: { filed = undefined, dire = 'ASC' } } = this.props;
-
-		this.state = {
-			sortBy: {
-				filed: filed ? filed : undefined,
-				dire: dire ? dire : 'ASC'
+		this.onHeaderClick = this.onHeaderClick.bind(this);
+	}
+	onHeaderClick(header){
+		if (header.sortable) {
+			let { data = [], sorting } = this.props;
+			if (sorting.filed === header.dataIndex){
+				sorting.dire = sorting.dire === "ASC" ? "DEC":"ASC";
+			} else {
+				sorting = {
+					filed : header.dataIndex,
+					sort:"ASC"
+				};
 			}
-		};
+			this.props.sortHandler(data,sorting)
+		}
 	}
 	createHeader() {
 		const { columns = [] } = this.props;
-		return columns.map((header, index) => <Header key={index} header={header} sortBy={this.state.sortBy} />);
+		return columns.map((header, index) => <Header key={index} header={header} onClickHeader={this.onHeaderClick} sort={this.props.sorting} />);
 	}
 
 	rowRender() {
@@ -37,8 +43,8 @@ class Grid extends PureComponent {
 	}
 
 	componentDidMount() {
-		const { onAfterRender = () => {}, defaultSorting = undefined } = this.props;
-		onAfterRender(defaultSorting);
+		const { onAfterRender = sorting => {}, sorting} = this.props;
+		onAfterRender(sorting);
 	}
 
 	render() {

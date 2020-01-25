@@ -1,4 +1,4 @@
-import { LIST } from './action';
+import {LIST, SORT} from './action';
 
 const getListOfCandidate = (sorting) => (dispatch) => {
 	let data = [
@@ -7,7 +7,7 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			name: 'snehal dangroshiya',
 			email: 'snehaldangroshiya@gmail.com',
 			age: 30,
-			experiance: 7,
+			experience: 7,
 			position: 'software engineer',
 			applied: new Date().getTime(),
 			status: 'Applied'
@@ -17,8 +17,8 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			name: 'mehul vasava',
 			email: 'mvasava@gmail.com',
 			age: 23,
-			experiance: 2,
-			position: 'software engineer',
+			experience: 2,
+			position: 'manager',
 			applied: new Date().getTime(),
 			status: 'Applied'
 		},
@@ -27,15 +27,15 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			name: 'mayank dabhiu',
 			email: 'mdabhi@gmail.com',
 			age: 20,
-			experiance: 6,
+			experience: 6,
 			position: 'QA engineer',
-			applied: new Date().getTime(),
+			applied: new Date("2020/1/20").getTime(),
 			status: 'Applied'
 		}
 	];
+
 	if (sorting) {
-		const { filed, dire = 'ASC' } = sorting;
-		data = data.sort((one, two) => (dire === 'ASC' ? one[filed] - two[filed] : two[filed] - one[filed]));
+		data = sortByFiled(data,sorting)
 	}
 
 	dispatch({
@@ -44,4 +44,44 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 	});
 };
 
-export { getListOfCandidate };
+const sortBy = (data, sort)=>dispatch=>{
+	dispatch({
+		type: SORT,
+		payload: {
+			items: sortByFiled(data,sort),
+			sort
+		}
+	});
+};
+
+const sortByFiled = (data, sort)=>{
+	const { filed, dire = 'ASC' } = sort;
+	return [...data].sort((one, two) => {
+		let valueOne = one[filed];
+		let valueTwo = two[filed];
+
+		if (typeof valueOne === "string") {
+			valueOne = valueOne.toUpperCase();
+			valueTwo = valueTwo.toUpperCase();
+			if (dire === 'ASC') {
+				if (valueOne < valueTwo) {
+					return -1;
+				}
+				if (valueOne > valueTwo) {
+					return 1;
+				}
+			} else {
+				if (valueOne > valueTwo) {
+					return -1;
+				}
+				if (valueOne < valueTwo) {
+					return 1;
+				}
+			}
+			return 0;
+		} else {
+			return dire === 'ASC' ? valueOne - valueTwo : valueTwo - valueOne;
+		}
+	});
+};
+export { getListOfCandidate,sortBy };

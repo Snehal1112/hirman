@@ -21,7 +21,7 @@ const Title = styled.div`
 const SortContainer = styled.span`
 	padding: 0px 3px 0px 5px;
 
-	display: ${(props) => (props.defaultSortBy ? 'inline' : 'none')};
+	display: ${(props) => (props.sortedField ? 'inline' : 'none')};
 	${TH}:hover & {
 		display: inline;
 	}

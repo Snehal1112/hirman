@@ -1,73 +1,67 @@
 import React, { Component } from 'react';
 import Grid from './components/grid';
 import { connect } from 'react-redux';
-import { getListOfCandidate } from './actions/ApplicantActions';
+import { getListOfCandidate,sortBy } from './actions/ApplicantActions';
 import { Renderers } from './utils/Renderers';
 
 const columns = [
 	{
 		name: 'Name',
 		dataIndex: 'name',
-		type: 'string',
 		width: 200
 	},
 	{
 		name: 'Email',
 		dataIndex: 'email',
-		type: 'string',
 		width: 200
 	},
 	{
 		name: 'Age',
 		dataIndex: 'age',
-		type: 'number',
 		width: 80,
 		textAlign: 'center'
 	},
 	{
-		name: 'Experiance',
-		dataIndex: 'experiance',
-		type: 'number',
+		name: 'Experience',
+		dataIndex: 'experience',
 		width: 150,
 		sortable: true
 	},
 	{
 		name: 'Position applied',
 		dataIndex: 'position',
-		type: 'string',
 		sortable: true,
 		width: 200
 	},
 	{
 		name: 'Applied',
 		dataIndex: 'applied',
-		type: 'date',
 		sortable: true,
-		formate: 'd-m-Y',
-		renderer: Renderers.dateRendere
+		format: 'd-m-Y',
+		renderer: Renderers.dateRenderer
 	},
 	{
 		name: 'Status',
-		dataIndex: 'status',
-		type: 'string'
+		dataIndex: 'status'
 	}
 ];
 class App extends Component {
 	render() {
-		const { items = [] } = this.props;
+		const { items = [],sort:{filed="experience", dire="ASC"} } = this.props;
 		return (
 			<div className="App">
 				<Grid
 					columns={columns}
-					defaultSorting={{
-						filed: 'experiance',
-						dire: 'DESC'
+					sorting={{
+						filed,
+						dire
 					}}
 					topBar={{
 						disabled: false
 					}}
 					data={items}
 					onAfterRender={this.props.getListOfCandidate}
+					sortHandler={this.props.sortBy}
 				/>
 			</div>
 		);
@@ -75,7 +69,8 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	items: state.candidate.items
+	items: state.candidate.items,
+	sort:state.candidate.sort
 });
 
-export default connect(mapStateToProps, { getListOfCandidate })(App);
+export default connect(mapStateToProps, { getListOfCandidate,sortBy })(App);

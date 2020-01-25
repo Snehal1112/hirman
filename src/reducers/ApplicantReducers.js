@@ -1,15 +1,22 @@
-import { LIST } from '../actions/action';
+import {LIST, SORT} from '../actions/action';
 
 const initState = {
-	items: []
+	items: [],
+	sort:{filed:undefined,dire:'ASC'}
 };
 
-export default (state = initState, action) => {
-	switch (action.type) {
+export default (state = initState, {type,payload}) => {
+	switch (type) {
 		case LIST:
 			return {
 				...state,
-				items: action.payload
+				items: payload
+			};
+		case SORT:
+			return {
+				...state,
+				items: [...payload.items],
+				sort:{...payload.sort}
 			};
 		default:
 			return state;
