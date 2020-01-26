@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import Grid from './components/grid';
 import { connect } from 'react-redux';
-import { getListOfCandidate,sortBy } from './actions/ApplicantActions';
+import { getListOfCandidate, sortBy, filterBy } from './actions/ApplicantActions';
 import { Renderers } from './utils/Renderers';
 
 const columns = [
 	{
 		name: 'Name',
 		dataIndex: 'name',
+		filter:true,
+		editor:{
+			type:'text',
+			placeholder:"Filter By name"
+		},
 		width: 200
 	},
 	{
@@ -31,6 +36,11 @@ const columns = [
 		name: 'Position applied',
 		dataIndex: 'position',
 		sortable: true,
+		filter:true,
+		editor:{
+			type:'text',
+			placeholder:"Filter By position"
+		},
 		width: 200
 	},
 	{
@@ -42,35 +52,30 @@ const columns = [
 	},
 	{
 		name: 'Status',
-		dataIndex: 'status'
+		dataIndex: 'status',
+		filter:true,
+		editor:{
+			type:'select',
+			options:['Approved','Rejected','Waiting']
+		}
 	}
 ];
-class App extends Component {
-	render() {
-		const { items = [],sort:{field="experience", dire="ASC"} } = this.props;
-		return (
-			<div className="App">
-				<Grid
-					columns={columns}
-					sorting={{
-						field,
-						dire
-					}}
-					topBar={{
-						disabled: false
-					}}
-					data={items}
-					onAfterRender={this.props.getListOfCandidate}
-					sortHandler={this.props.sortBy}
-				/>
-			</div>
-		);
-	}
-}
+const App = (props)=> {
+	return (
+		<div className="App">
+			<Grid
+				columns={columns}
+				{...props}
+			/>
+		</div>
+	);
+};
 
 const mapStateToProps = (state) => ({
 	items: state.candidate.items,
-	sort:state.candidate.sort
+	sort: state.candidate.sort,
+	filter:state.candidate.filter,
+	filteredData : state.candidate.filteredData
 });
 
-export default connect(mapStateToProps, { getListOfCandidate,sortBy })(App);
+export default connect(mapStateToProps, { getListOfCandidate, sortBy, filterBy })(App);

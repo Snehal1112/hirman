@@ -1,4 +1,4 @@
-import {LIST, SORT} from './action';
+import {APPLY_FILTER, LIST, SORT} from './action';
 
 const getListOfCandidate = (sorting) => (dispatch) => {
 	let data = [
@@ -10,7 +10,7 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			experience: 7,
 			position: 'software engineer',
 			applied: new Date().getTime(),
-			status: 'Applied'
+			status: 'Approved'
 		},
 		{
 			id: 2,
@@ -20,7 +20,7 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			experience: 2,
 			position: 'manager',
 			applied: new Date().getTime(),
-			status: 'Applied'
+			status: 'Rejected'
 		},
 		{
 			id: 3,
@@ -30,17 +30,37 @@ const getListOfCandidate = (sorting) => (dispatch) => {
 			experience: 6,
 			position: 'QA engineer',
 			applied: new Date("2020/1/20").getTime(),
-			status: 'Applied'
+			status: 'Waiting'
+		},
+		{
+			id: 4,
+			name: 'dhara dangroshiya',
+			email: 'dhara@gmail.com',
+			age: 25,
+			experience: 3,
+			position: 'tech lead',
+			applied: new Date("2020/1/20").getTime(),
+			status: 'Approved'
 		}
 	];
 
 	if (sorting) {
 		data = sortByField(data,sorting)
 	}
-
 	dispatch({
 		type: LIST,
 		payload: data
+	});
+};
+
+const filterBy = (data, field,value)=>dispatch=>{
+	dispatch({
+		type: APPLY_FILTER,
+		payload: {
+			items: data,
+			filter:true,
+			data:data.filter(item=>item[field].toLowerCase() === value.toLowerCase())
+		}
 	});
 };
 
@@ -84,4 +104,4 @@ const sortByField = (data, sort)=>{
 		}
 	});
 };
-export { getListOfCandidate,sortBy };
+export { getListOfCandidate, filterBy, sortBy };

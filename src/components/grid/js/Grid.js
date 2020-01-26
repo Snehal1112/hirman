@@ -1,34 +1,51 @@
 import React, { PureComponent } from 'react';
-import TopToolbar from './TopToolbar';
 import Header from './ColumnHeader';
 
 class Grid extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.onHeaderClick = this.onHeaderClick.bind(this);
+		this.onApplyFilter = this.onApplyFilter.bind(this);
 	}
+
 	onHeaderClick(header){
 		if (header.sortable) {
-			let { data = [], sorting } = this.props;
-			if (sorting.field === header.dataIndex){
-				sorting.dire = sorting.dire === "ASC" ? "DEC":"ASC";
+			let { items = [], sort={} } = this.props;
+			if (sort.field === header.dataIndex){
+				sort.dire = sort.dire === "ASC" ? "DEC":"ASC";
 			} else {
-				sorting = {
+				sort = {
 					field : header.dataIndex,
-					sort:"ASC"
+					dire:"ASC"
 				};
 			}
-			this.props.sortHandler(data,sorting)
+			const{sortBy= (data, sort)=>{}} = this.props;
+			sortBy(items,sort)
 		}
 	}
+
+	onApplyFilter(field, value){
+		const {filterBy, items =[]} = this.props;
+		filterBy(items, field, value);
+	}
+
 	createHeader() {
-		const { columns = [] } = this.props;
-		return columns.map((header, index) => <Header key={index} header={header} onClickHeader={this.onHeaderClick} sort={this.props.sorting} />);
+		const { columns = [],sort } = this.props;
+		return columns.map((header, index) => <Header
+				key={index}
+				header={header}
+				onClickHeader={this.onHeaderClick}
+				onApplyFilter={this.onApplyFilter}
+				sort={sort} />
+			);
 	}
 
 	rowRender() {
-		const { columns = [], data = [] } = this.props;
-		const rows = data.map((row) => {
+		let { columns = [], items = [], filter, filteredData} = this.props;
+		if(filter){
+			items = filteredData;
+		}
+		const rows = items.map((row) => {
 			return (
 				<tr key={row.id}>
 					{columns.map((col, index) => (
@@ -43,23 +60,18 @@ class Grid extends PureComponent {
 	}
 
 	componentDidMount() {
-		const { onAfterRender = sorting => {}, sorting} = this.props;
-		onAfterRender(sorting);
+		const { getListOfCandidate = sorting => {}, sort={field:"experience", dire:"ASC"}} = this.props;
+		getListOfCandidate(sort);
 	}
 
 	render() {
-		const { topBar = {} } = this.props;
-
 		return (
-			<div>
-				<TopToolbar {...topBar} />
-				<table>
-					<thead>
-						<tr>{this.createHeader()}</tr>
-					</thead>
-					<tbody>{this.rowRender()}</tbody>
-				</table>
-			</div>
+			<table>
+				<thead>
+					<tr>{this.createHeader()}</tr>
+				</thead>
+				<tbody>{this.rowRender()}</tbody>
+			</table>
 		);
 	}
 }
